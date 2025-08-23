@@ -82,29 +82,29 @@ def get_cumulative(site, data, var):
         
     elif (site == 'NEON-WREF'):
         if var=='NEE':
-            da = data[var][pd.datetime(2019,1,1):pd.datetime(2023,12,31)]*nee_scaler
+            da = data[var][pd.datetime(2019,1,1):pd.datetime(2024,12,31)]*nee_scaler
             out = da.groupby(da.index.year).cumsum()
         elif var=='LH':
-            da = data[var][pd.datetime(2019,1,1):pd.datetime(2023,12,31)]*lh_scaler
+            da = data[var][pd.datetime(2019,1,1):pd.datetime(2024,12,31)]*lh_scaler
             out = da.groupby(da.index.year).cumsum()
         else:
-            da = data[var][pd.datetime(2019,1,1):pd.datetime(2023,12,31)]
+            da = data[var][pd.datetime(2019,1,1):pd.datetime(2024,12,31)]
             out = da.groupby(da.index.year).cumsum()
             
     elif (site == 'NEON-ABBY'):
         if var=='NEE':
-            da = data[var][pd.datetime(2021,1,1):pd.datetime(2022,12,31)]*nee_scaler
+            da = data[var][pd.datetime(2019,1,1):pd.datetime(2024,12,31)]*nee_scaler
             out = da.groupby(da.index.year).cumsum()
         elif var=='LH':
-            da = data[var][pd.datetime(2021,1,1):pd.datetime(2022,12,31)]*lh_scaler
+            da = data[var][pd.datetime(2019,1,1):pd.datetime(2024,12,31)]*lh_scaler
             out = da.groupby(da.index.year).cumsum()
         else:
-            da = data[var][pd.datetime(2021,1,1):pd.datetime(2022,12,31)]
+            da = data[var][pd.datetime(2019,1,1):pd.datetime(2024,12,31)]
             out = da.groupby(da.index.year).cumsum()
         
     elif (site == 'US-Me6'):
         if var =='GPP':
-            da = data[var][pd.datetime(2019,1,1):pd.datetime(2021,12,31)]
+            da = data[var][pd.datetime(2011,1,1):pd.datetime(2022,12,31)]
             out = da.groupby(da.index.year).cumsum()
         elif var == 'NEE':
             da = data[var][pd.datetime(2011,1,1):pd.datetime(2022,12,31)]*nee_scaler

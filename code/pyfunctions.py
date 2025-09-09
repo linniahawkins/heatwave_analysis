@@ -103,10 +103,7 @@ def get_cumulative(site, data, var):
             out = da.groupby(da.index.year).cumsum()
         
     elif (site == 'US-Me6'):
-        if var =='GPP':
-            da = data[var][pd.datetime(2011,1,1):pd.datetime(2022,12,31)]
-            out = da.groupby(da.index.year).cumsum()
-        elif var == 'NEE':
+        if var == 'NEE':
             da = data[var][pd.datetime(2011,1,1):pd.datetime(2022,12,31)]*nee_scaler
             out = da.groupby(da.index.year).cumsum()
         elif var =='LH':
@@ -114,7 +111,8 @@ def get_cumulative(site, data, var):
             da[da<0] = np.NaN
             out = da.groupby(da.index.year).cumsum()
         else:
-            print("var must be 'LH','GPP','NEE' ")
+            da = data[var][pd.datetime(2011,1,1):pd.datetime(2022,12,31)]
+            out = da.groupby(da.index.year).cumsum()
     
     else:
         print("site must be one of: CA-Ca3, US-Me6, NEON-WREF, NEON-ABBY")

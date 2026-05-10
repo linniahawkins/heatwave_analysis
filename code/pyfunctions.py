@@ -61,60 +61,29 @@ def get_daily_clim(df,var):
     
     return df_out 
 
-
-
-
 def get_cumulative(site, data, var):
+    """Cumulative annual sum of `var` for the site's data record."""
     
-    nee_scaler = (1/1e6)*86400*12 # umol/m2/s to gC/m2/day
-    lh_scaler = (1/(2.45e6)) * 86400 # W/m2 to mm/day
-
-    if (site == 'CA-Ca3'):
-        if var=='NEE':
-            da = data[var][pd.datetime(2002,1,1):pd.datetime(2022,12,31)]*nee_scaler
-            out = da.groupby(da.index.year).cumsum()
-        elif var=='LH':
-            da = data[var][pd.datetime(2002,1,1):pd.datetime(2022,12,31)]*lh_scaler
-            out = da.groupby(da.index.year).cumsum()
-        else:
-            da = data[var][pd.datetime(2002,1,1):pd.datetime(2022,12,31)]
-            out = da.groupby(da.index.year).cumsum()
-        
-    elif (site == 'NEON-WREF'):
-        if var=='NEE':
-            da = data[var][pd.datetime(2019,1,1):pd.datetime(2024,12,31)]*nee_scaler
-            out = da.groupby(da.index.year).cumsum()
-        elif var=='LH':
-            da = data[var][pd.datetime(2019,1,1):pd.datetime(2024,12,31)]*lh_scaler
-            out = da.groupby(da.index.year).cumsum()
-        else:
-            da = data[var][pd.datetime(2019,1,1):pd.datetime(2024,12,31)]
-            out = da.groupby(da.index.year).cumsum()
-            
-    elif (site == 'NEON-ABBY'):
-        if var=='NEE':
-            da = data[var][pd.datetime(2019,1,1):pd.datetime(2024,12,31)]*nee_scaler
-            out = da.groupby(da.index.year).cumsum()
-        elif var=='LH':
-            da = data[var][pd.datetime(2019,1,1):pd.datetime(2024,12,31)]*lh_scaler
-            out = da.groupby(da.index.year).cumsum()
-        else:
-            da = data[var][pd.datetime(2019,1,1):pd.datetime(2024,12,31)]
-            out = da.groupby(da.index.year).cumsum()
-        
-    elif (site == 'US-Me6'):
-        if var == 'NEE':
-            da = data[var][pd.datetime(2011,1,1):pd.datetime(2022,12,31)]*nee_scaler
-            out = da.groupby(da.index.year).cumsum()
-        elif var =='LH':
-            da = data[var][pd.datetime(2011,1,1):pd.datetime(2022,12,31)]*lh_scaler
-            da[da<0] = np.NaN
-            out = da.groupby(da.index.year).cumsum()
-        else:
-            da = data[var][pd.datetime(2011,1,1):pd.datetime(2022,12,31)]
-            out = da.groupby(da.index.year).cumsum()
+    nee_scaler = (1/1e6) * 86400 * 12       # umol/m2/s -> gC/m2/day
+    lh_scaler  = (1/2.45e6) * 86400         # W/m2 -> mm/day
     
-    else:
-        print("site must be one of: CA-Ca3, US-Me6, NEON-WREF, NEON-ABBY")
-        
-    return out
+    site_years = {
+        'CA-Ca3':    (2002, 2022),
+        'NEON-WREF': (2019, 2024),
+        'NEON-ABBY': (2019, 2024),
+        'US-Me6':    (2011, 2022),
+    }
+    if site not in site_years:
+        raise ValueError(f"site must be one of: {list(site_years)}")
+    
+    y0, y1 = site_years[site]
+    da = data[var].loc[pd.Timestamp(y0, 1, 1):pd.Timestamp(y1, 12, 31)].copy()
+    
+    if var == 'NEE':
+        da = da * nee_scaler
+    elif var == 'LH':
+        da = da * lh_scaler
+        if site == 'US-Me6':
+            da[da < 0] = np.nan   # filter negative LH at Me6 only
+    
+    return da.groupby(da.index.year).cumsum()

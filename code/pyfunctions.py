@@ -15,13 +15,13 @@ def load_daily_data(site,sw_thresh):
     if (site=='CA-Ca3'):
         # CA-Ca3 
         filename = os.path.join(in_dir+'CA-Ca3.csv')
-        df = pd.read_csv(filename,header=0,index_col=0, parse_dates=True, squeeze=True)
+        df = pd.read_csv(filename,header=0,index_col=0, parse_dates=True)
         df.loc['2018', :] = np.NaN
         df_daily = df[df['SW_IN']>sw_thresh].resample('D').mean()
         
     elif (site=='US-Me6'):
         filename = os.path.join(in_dir+'US-Me6.csv')
-        df = pd.read_csv(filename,header=0,index_col=0, parse_dates=True, squeeze=True)
+        df = pd.read_csv(filename,header=0,index_col=0, parse_dates=True)
         df.loc['2018', :] = np.NaN
         df_daily = df[df['SW_IN']>sw_thresh].resample('D').mean()
         
